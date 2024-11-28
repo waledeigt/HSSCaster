@@ -1,0 +1,20 @@
+{
+    "resolution": "050",
+    "year": "2010",
+    "data_path": "/scratch/project_2000403/magnetograms/f-modes/DW_pipeline/CR_ffs/data/new_hdr",
+    "plot_path": "/scratch/project_2000403/magnetograms/f-modes/DW_pipeline/CR_ffs/CR20142015_hp_v4/examples",
+    "sdate": "2010-10-29_00:00",
+    "edate": "2011-01-01_00:00",
+    "carr_rot": "2010-11-26_08:00",
+    "emerge_rot": "2010-11-29_00:00",
+    "first_emerge": "2010-11-27_12:00",
+    "lon0": -65,
+    "glat": -30,
+    "sigma_lvl": 2.0,
+    "kx_bound1": 750,
+    "kx_bound2": 2000,
+    "fmod_k1": 1.05,
+    "fmod_k2": 0.85,
+    "aiapath": "/scratch/project_2000403/magnetograms/f-modes/DW_pipeline/aiadata/AR11130/",
+    "jsoc_email": "dale.weigt@aalto.fi"
+}
