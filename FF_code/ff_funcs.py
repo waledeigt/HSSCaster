@@ -280,10 +280,223 @@ def fmode_pow(fav, ferr, llon, fin_dates, emerge_rot, true_emerge):
     #fig.suptitle(f'Full averaged kx direction [45,75]', y=1.05)
     return(fig, ax1, ax2)
 #%%
-def CRFF_av(data_path,ff_path, lon_range, glat, lonvec, latvec, ffiles, mt_dates, ffdates):
+# def CRFF_av(data_path,ff_path, lon_range, glat, lonvec, latvec, ffiles, mt_dates, ffdates):
     
     
-    lng, ltg = np.meshgrid(lonvec, latvec)
+#     lng, ltg = np.meshgrid(lonvec, latvec)
+#     lng , ltg = lng.flatten(), ltg.flatten()
+#     points = np.column_stack((lng,ltg))
+        
+#     av_maps = []
+#     dd_indx = []
+#     whts = []
+#     lon_pt = []
+#     lat_pt = []
+#     for findx, glon in enumerate(lon_range):
+#         data_files = data_path + f'{ffiles[findx]}'
+        
+#         proj_points = SkyCoord(points[:,0]*u.deg, points[:,1]*u.deg, 
+#                                 frame=frames.HeliographicStonyhurst, obstime=ffdates[len(ffdates)//2],
+#                                 observer = "earth")
+#         proj_points = proj_points.transform_to(frames.Helioprojective)
+        
+#         # dproj_points = SkyCoord(points[:,0]*u.deg, points[:,1]*u.deg, 
+#         #                         frame=frames.HeliographicStonyhurst, obstime=ffdates[len(ffdates)//2],
+#         #                         observer = "earth")
+#         # dproj_points = proj_points.transform_to(frames.Helioprojective)
+        
+#         #sunr = dproj_points.distance.km/proj_points.distance.km
+#         # glon, glat = 24,  -12
+        
+#         g_pnt = SkyCoord(glon*u.deg, glat*u.deg, 
+#                                 frame=frames.HeliographicStonyhurst, obstime=mt_dates[findx],
+#                                 observer = "earth")
+#         g_pnt = g_pnt.transform_to(frames.Helioprojective) # before obstime=mt_dates[findx]
+        
+#         grid_pnt = [[g_pnt.Tx.arcsec, g_pnt.Ty.arcsec]]
+        
+        
+#         knn = NearestNeighbors(n_neighbors=4)
+#         knn.fit(np.column_stack((proj_points.Tx, proj_points.Ty)))
+#         dist, indx = knn.kneighbors(X=grid_pnt, return_distance=True)
+#         print(dist,indx)
+        
+#         weights = []
+#         for ii in dist[0]:
+#             w = ii/np.nansum(dist[0])
+#             weights.append(w)
+        
+#         weights = np.flip(weights)
+#         whts.append(weights)
+        
+#         hr = data_files[-18:-13]
+#         # for ii in hrs:    
+#         #     alltt = [at[-18:-13] for at in data_files]
+#         dd = ff_path + '/' + hr + '/' 
+            
+    
+#         ff_files = [f for f in os.listdir(dd) if os.path.isfile(os.path.join(dd, f))]
+#         ffs = []
+     
+#         for ix in indx[0]:
+#             print(f'{(proj_points.Tx.arcsec)[ix]:.3f}_{(proj_points.Ty.arcsec)[ix]:.3f} at {hr} maps')
+#             tx, ty = round(proj_points.Tx.arcsec[ix],3), round(proj_points.Ty.arcsec[ix],3)
+            
+#             pf = [j[:-16].split("_") for j in ff_files]
+#             ppf = np.array(pf).astype(float)
+#             dtx = np.abs(tx - ppf[:,0])
+#             dty = np.abs(ty - ppf[:,1])
+#             inx = np.where((dtx <= 1))[0]
+#             iny = np.where((dty <= 1))[0]
+#             inxy = np.intersect1d(inx, iny)
+#             print(inx, iny, inxy)
+#             #final = [j for j in ff_files if j.startswith(f'{(proj_points.Tx.arcsec)[ix]:.3f}_{(proj_points.Ty.arcsec)[ix]:.3f}_')]
+#             final = ff_files[inxy[0]]
+#             ffs.append(np.loadtxt(dd + final))
+#             print(f'Loading {dd+final})')
+        
+#         print(f'Finished for ({glon} lon, {glat} lat: {ffiles[findx]}')
+#         print('______________________________________________________')
+#         data = np.average(np.array(ffs), weights=weights, axis=0)
+#         av_maps.append(data)
+#         dd_indx.append(indx[0])
+#         lon_pt.append(glon)
+#         lat_pt.append(glat)
+
+#     return(av_maps, dd_indx, whts, lon_pt, lat_pt)#,rms)
+
+
+# #%%
+# def FF_deproj(data_path, av_maps, dd_indx, weights, lon_range, glat, lonvec, latvec,ik0, ffiles, mt_dates, ffdates):
+
+#     # av_maps = []
+#     # dd_indx = []
+#     # whts = []
+#     # lon_pt = []
+#     # lat_pt = []
+    
+#     lng, ltg = np.meshgrid(lonvec, latvec)
+#     lng , ltg = lng.flatten(), ltg.flatten()
+#     points = np.column_stack((lng,ltg))
+#     lngr = np.deg2rad(lng)
+#     ltgr = np.deg2rad(ltg)
+    
+
+    
+    
+#     mindx = []
+#     btrack = []
+#     trackmap = []
+#     for findx, glon in enumerate(lon_range):
+    
+#         data_files = data_path + f'{ffiles[findx]}'
+#         # glon, glat = 24,  -12
+#         proj_points = SkyCoord(points[:,0]*u.deg, points[:,1]*u.deg, 
+#                                 frame=frames.HeliographicStonyhurst, obstime=mt_dates[findx],
+#                                 observer = "earth") #obstime=ffdates[len(ffdates)//2]
+#         proj_points = proj_points.transform_to(frames.Helioprojective)
+#         # glon, glat = 24,  -12
+        
+#         g_pnt = SkyCoord(glon*u.deg, glat*u.deg, 
+#                                 frame=frames.HeliographicStonyhurst, obstime=mt_dates[findx],
+#                                 observer = "earth")
+#         g_pnt = g_pnt.transform_to(frames.Helioprojective)
+        
+#         grid_pnt = [[g_pnt.Tx.arcsec, g_pnt.Ty.arcsec]]
+        
+        
+#         knn = NearestNeighbors(n_neighbors=4)
+#         knn.fit(np.column_stack((proj_points.Tx, proj_points.Ty)))
+#         dist, indx = knn.kneighbors(X=grid_pnt, return_distance=True)
+#         print(dist,indx)
+#         #print(dist,indx)
+        
+#         #lat_ind = np.concatenate([np.where(ii.lat.degree == latvec)[0] for ii in points[indx[0]]\.transform_to(frames.HeliographicStonyhurst)])
+#         latdx = np.concatenate([np.where(round(ii.lat.degree, 3) == latvec)[0] for ii in proj_points.transform_to(frames.HeliographicStonyhurst)[indx[0]]])
+#         lindx = np.concatenate([np.where(round(ii.lon.degree, 3) == lonvec)[0] for ii in proj_points.transform_to(frames.HeliographicStonyhurst)[indx[0]]])
+#         #lat_ind = np.concatenate([np.where(ii == platvec)[0] for ii in proj_points[indx[0]][:,1]])
+#         #lat_ind = np.concatenate([np.where(ii == latvec)[0] for ii in points[indx[0]][:,1]])
+
+#         #lon_ind = []
+#         # for ii in lat_ind:
+#         #     ind = np.concatenate([np.where(jj == plonvec[ii])[0] for jj in proj_points[indx[0]][:,0]])
+#         #     lon_ind.append(np.round(np.mean(ind).astype(int)))
+#         #lon_ind = np.concatenate([np.where(ii == lonvec)[0] for ii in points[indx[0]][:,0]])
+
+      
+#         """Generating maps"""
+#         #ik0 = 0        
+#         f=fits.open(data_path + f'/{ffiles[findx]}')
+#         fmaps = []
+#         bmaps = []
+#         for lat_ind,lon_ind in zip(latdx,lindx): 
+#             data_map = f[0].data[lat_ind ,lon_ind,ik0,:,:]
+#             bmap = f[1].data[latdx, lindx]
+#             fmaps.append(data_map)
+#             bmaps.append(bmap)
+#         f.close()
+            
+#         print(len(weights[findx]))
+#         """Creating point map"""
+#         # for ii in np.array(fmaps):
+#         mm = np.array(fmaps)
+#         print(len(mm))
+#         av4 = np.average(mm, weights=weights[findx]
+#                         ,axis=0)
+#         av_bw = blockwise_average_ND(av4, [2,2])
+        
+#         bb = np.array(bmaps)
+#         av_bb = np.average(bb, weights=weights[findx],
+#                             axis = 0)
+        
+#         btrack.append(av_bb)
+#         #av_ind = (av_bw)*((av_bw > 0.8) & (av_bw < 1.3))
+#         #av_ind = (av_bw)*(av_bw > 0.1) # pixe; thresholding
+
+#         #av = np.where(av_ind==0, np.nan, av_ind)
+#         #av = av_ind
+#         av=av_bw
+#         hrs_indx = []
+#         hrs = ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00']
+        
+#         for ii in hrs:
+#             idx = [i for i, j in enumerate(ffiles[findx:findx+1]) if j.endswith(f'{ii}_FD_k-nu.fits')]
+#             hrs_indx.append(idx)
+            
+#         #print(hrs_indx)
+        
+#         # av_indx = np.array([ii for ii, jj in enumerate(hrs_indx) if len(jj) != 0])[0]
+#         # av_map = np.array(av_maps)
+#         #brms_arr = np.array(brms)
+        
+#         #img = np.abs(av/av_map[findx][av_indx])
+#         img_bw = np.abs(av/blockwise_average_ND(av_maps[findx],[2,2]))
+#         #brms_tt = brms[findx][av_indx]
+
+#         # uo_maps.append(img)
+        
+#         # hrs_indx_arr = np.concatenate(hrs_indx)
+#         # map_indx = np.argsort(hrs_indx_arr)
+#         # o_maps = [np.array(uo_maps)[jk,:,:] for jk in map_indx]
+#         #img_bw = blockwise_average_ND(trackmap[0], [5,5]
+#         print(np.nanmean(img_bw))
+#         if np.nanmean(img_bw) != np.nan and np.nanmean(img_bw) > 0.0 and np.nanmean(img_bw) < 1e10:
+#             trackmap.append(img_bw)
+#             # btrack.append(brms_tt)
+#             mindx.append(findx)
+#             print(f'finished for {glon}, file: {ffiles[findx]}')
+#         else:
+#             trackmap.append(img_bw)
+#             #btrack.append(brms_tt)
+#             print(f'No valid map for: {glon}, file: {ffiles[findx]}')
+#         print('____________________________________')
+#     return(trackmap, btrack, mindx)
+
+#%%
+def CRFF_avFD(date=Time('2010-11-30T04:00:00', format='isot'),lonFD=np.linspace(-75,75,21), latFD = np.linspace(-67.5,67.5,19)):
+    
+    
+    lng, ltg = np.meshgrid(lonFD, latFD)
     lng , ltg = lng.flatten(), ltg.flatten()
     points = np.column_stack((lng,ltg))
         
@@ -292,203 +505,173 @@ def CRFF_av(data_path,ff_path, lon_range, glat, lonvec, latvec, ffiles, mt_dates
     whts = []
     lon_pt = []
     lat_pt = []
-    for findx, glon in enumerate(lon_range):
-        data_files = data_path + f'{ffiles[findx]}'
-        
-        proj_points = SkyCoord(points[:,0]*u.deg, points[:,1]*u.deg, 
-                                frame=frames.HeliographicStonyhurst, obstime=ffdates[len(ffdates)//2],
-                                observer = "earth")
-        proj_points = proj_points.transform_to(frames.Helioprojective)
-        
-        # dproj_points = SkyCoord(points[:,0]*u.deg, points[:,1]*u.deg, 
-        #                         frame=frames.HeliographicStonyhurst, obstime=ffdates[len(ffdates)//2],
-        #                         observer = "earth")
-        # dproj_points = proj_points.transform_to(frames.Helioprojective)
-        
-        #sunr = dproj_points.distance.km/proj_points.distance.km
-        # glon, glat = 24,  -12
-        
-        g_pnt = SkyCoord(glon*u.deg, glat*u.deg, 
-                                frame=frames.HeliographicStonyhurst, obstime=mt_dates[findx],
-                                observer = "earth")
-        g_pnt = g_pnt.transform_to(frames.Helioprojective) # before obstime=mt_dates[findx]
-        
-        grid_pnt = [[g_pnt.Tx.arcsec, g_pnt.Ty.arcsec]]
-        
-        
-        knn = NearestNeighbors(n_neighbors=4)
-        knn.fit(np.column_stack((proj_points.Tx, proj_points.Ty)))
-        dist, indx = knn.kneighbors(X=grid_pnt, return_distance=True)
-        print(dist,indx)
-        
-        weights = []
-        for ii in dist[0]:
-            w = ii/np.nansum(dist[0])
-            weights.append(w)
-        
-        weights = np.flip(weights)
-        whts.append(weights)
-        
-        hr = data_files[-18:-13]
-        # for ii in hrs:    
-        #     alltt = [at[-18:-13] for at in data_files]
-        dd = ff_path + '/' + hr + '/' 
+    for glon in lonFD:
+        av_int_maps = []
+        dd_int_indx = []
+        int_whts = []
+        for glat in latFD:
             
-    
-        ff_files = [f for f in os.listdir(dd) if os.path.isfile(os.path.join(dd, f))]
-        ffs = []
-     
-        for ix in indx[0]:
-            print(f'{(proj_points.Tx.arcsec)[ix]:.3f}_{(proj_points.Ty.arcsec)[ix]:.3f} at {hr} maps')
-            tx, ty = round(proj_points.Tx.arcsec[ix],3), round(proj_points.Ty.arcsec[ix],3)
-            
-            pf = [j[:-16].split("_") for j in ff_files]
-            ppf = np.array(pf).astype(float)
-            dtx = np.abs(tx - ppf[:,0])
-            dty = np.abs(ty - ppf[:,1])
-            inx = np.where((dtx <= 1))[0]
-            iny = np.where((dty <= 1))[0]
-            inxy = np.intersect1d(inx, iny)
-            print(inx, iny, inxy)
-            #final = [j for j in ff_files if j.startswith(f'{(proj_points.Tx.arcsec)[ix]:.3f}_{(proj_points.Ty.arcsec)[ix]:.3f}_')]
-            final = ff_files[inxy[0]]
-            ffs.append(np.loadtxt(dd + final))
-            print(f'Loading {dd+final})')
-        
-        print(f'Finished for ({glon} lon, {glat} lat: {ffiles[findx]}')
-        print('______________________________________________________')
-        data = np.average(np.array(ffs), weights=weights, axis=0)
-        av_maps.append(data)
-        dd_indx.append(indx[0])
-        lon_pt.append(glon)
-        lat_pt.append(glat)
+            proj_points = SkyCoord(points[:,0]*u.deg, points[:,1]*u.deg, 
+                                    frame=frames.HeliographicStonyhurst, obstime=Time('2010-12-10T08:00:00', format='isot'),
+                                    observer = "earth")
+            proj_points = proj_points.transform_to(frames.Helioprojective)
 
-    return(av_maps, dd_indx, whts, lon_pt, lat_pt)#,rms)
+            
+            g_pnt = SkyCoord(glon*u.deg, glat*u.deg, 
+                                    frame=frames.HeliographicStonyhurst, obstime=date,
+                                    observer = "earth")
+            g_pnt = g_pnt.transform_to(frames.Helioprojective) # before obstime=mt_dates[findx]
+            
+            grid_pnt = [[g_pnt.Tx.arcsec, g_pnt.Ty.arcsec]]
+            
+            
+            knn = NearestNeighbors(n_neighbors=4)
+            knn.fit(np.column_stack((proj_points.Tx, proj_points.Ty)))
+            dist, indx = knn.kneighbors(X=grid_pnt, return_distance=True)
+            #print(dist,indx)
+            
+            weights = []
+            for ii in dist[0]:
+                w = ii/np.nansum(dist[0])
+                weights.append(w)
+            
+            weights = np.flip(weights)
+            int_whts.append(weights)
+            
+            ff_path = '/Volumes/SP PHD U3/CR_FF/CR20142015_hp_v4/'
+            hr = date.strftime('%H:%M')
+
+            dd = ff_path + '/' + hr + '/' 
+            #print(dd)
+            ff_files = [f for f in os.listdir(dd) if os.path.isfile(os.path.join(dd, f))]
+            ffs = []
+         
+            for ix in indx[0]:
+                
+                #print(f'{(proj_points.Tx.arcsec)[ix]:.3f}_{(proj_points.Ty.arcsec)[ix]:.3f} at {hr} maps')
+                tx, ty = round(proj_points.Tx.arcsec[ix],3), round(proj_points.Ty.arcsec[ix],3)
+                
+                pf = [j[:-16].split("_") for j in ff_files]
+                ppf = np.array(pf).astype(float)
+                dtx = np.abs(tx - ppf[:,0])
+                dty = np.abs(ty - ppf[:,1])
+                inx = np.where((dtx <= 1))[0]
+                iny = np.where((dty <= 1))[0]
+                inxy = np.intersect1d(inx, iny)
+
+                final = ff_files[inxy[0]]
+                ffs.append(np.loadtxt(dd + final))
+                
+
+            
+            #print(f'Finished for ({glon} lon, {glat} lat)')
+            #print('______________________________________________________')
+            data = np.average(np.array(ffs), weights=weights, axis=0)
+            av_int_maps.append(data)
+            dd_int_indx.append(indx[0])
+
+        
+        av_maps.append(av_int_maps)
+        dd_indx.append(dd_int_indx)
+        whts.append(int_whts)
+        
+    return(av_maps, dd_indx, whts)
 
 
 #%%
-def FF_deproj(data_path, av_maps, dd_indx, weights, lon_range, glat, lonvec, latvec,ik0, ffiles, mt_dates, ffdates):
+def FF_deprojFD(av_maps, dd_indx, weights, date=Time('2010-11-30T04:00:00', format='isot'),lonFD=np.linspace(-75,75,21), latFD = np.linspace(-67.5,67.5,19)):
 
-    # av_maps = []
-    # dd_indx = []
-    # whts = []
-    # lon_pt = []
-    # lat_pt = []
-    
-    lng, ltg = np.meshgrid(lonvec, latvec)
+    lng, ltg = np.meshgrid(lonFD, latFD)
     lng , ltg = lng.flatten(), ltg.flatten()
     points = np.column_stack((lng,ltg))
-    lngr = np.deg2rad(lng)
-    ltgr = np.deg2rad(ltg)
     
 
     
     
-    mindx = []
-    btrack = []
+    # mindx = []
+    # btrack = []
     trackmap = []
-    for findx, glon in enumerate(lon_range):
+    for ii, glon in enumerate(lonFD):
+        int_map = []
+        for jj, glat in enumerate(latFD):
     
-        data_files = data_path + f'{ffiles[findx]}'
+        #data_files = data_path + f'{ffiles[findx]}'
         # glon, glat = 24,  -12
-        proj_points = SkyCoord(points[:,0]*u.deg, points[:,1]*u.deg, 
-                                frame=frames.HeliographicStonyhurst, obstime=mt_dates[findx],
-                                observer = "earth") #obstime=ffdates[len(ffdates)//2]
-        proj_points = proj_points.transform_to(frames.Helioprojective)
-        # glon, glat = 24,  -12
-        
-        g_pnt = SkyCoord(glon*u.deg, glat*u.deg, 
-                                frame=frames.HeliographicStonyhurst, obstime=mt_dates[findx],
-                                observer = "earth")
-        g_pnt = g_pnt.transform_to(frames.Helioprojective)
-        
-        grid_pnt = [[g_pnt.Tx.arcsec, g_pnt.Ty.arcsec]]
-        
-        
-        knn = NearestNeighbors(n_neighbors=4)
-        knn.fit(np.column_stack((proj_points.Tx, proj_points.Ty)))
-        dist, indx = knn.kneighbors(X=grid_pnt, return_distance=True)
-        print(dist,indx)
-        #print(dist,indx)
-        
-        #lat_ind = np.concatenate([np.where(ii.lat.degree == latvec)[0] for ii in points[indx[0]]\.transform_to(frames.HeliographicStonyhurst)])
-        latdx = np.concatenate([np.where(round(ii.lat.degree, 3) == latvec)[0] for ii in proj_points.transform_to(frames.HeliographicStonyhurst)[indx[0]]])
-        lindx = np.concatenate([np.where(round(ii.lon.degree, 3) == lonvec)[0] for ii in proj_points.transform_to(frames.HeliographicStonyhurst)[indx[0]]])
-        #lat_ind = np.concatenate([np.where(ii == platvec)[0] for ii in proj_points[indx[0]][:,1]])
-        #lat_ind = np.concatenate([np.where(ii == latvec)[0] for ii in points[indx[0]][:,1]])
-
-        #lon_ind = []
-        # for ii in lat_ind:
-        #     ind = np.concatenate([np.where(jj == plonvec[ii])[0] for jj in proj_points[indx[0]][:,0]])
-        #     lon_ind.append(np.round(np.mean(ind).astype(int)))
-        #lon_ind = np.concatenate([np.where(ii == lonvec)[0] for ii in points[indx[0]][:,0]])
-
-      
-        """Generating maps"""
-        #ik0 = 0        
-        f=fits.open(data_path + f'/{ffiles[findx]}')
-        fmaps = []
-        bmaps = []
-        for lat_ind,lon_ind in zip(latdx,lindx): 
-            data_map = f[0].data[lat_ind ,lon_ind,ik0,:,:]
-            bmap = f[1].data[latdx, lindx]
-            fmaps.append(data_map)
-            bmaps.append(bmap)
-        f.close()
+            proj_points = SkyCoord(points[:,0]*u.deg, points[:,1]*u.deg, 
+                                    frame=frames.HeliographicStonyhurst, obstime=date,
+                                    observer = "earth") #obstime=ffdates[len(ffdates)//2]
+            proj_points = proj_points.transform_to(frames.Helioprojective)
+            # glon, glat = 24,  -12
             
-        print(len(weights[findx]))
-        """Creating point map"""
-        # for ii in np.array(fmaps):
-        mm = np.array(fmaps)
-        print(len(mm))
-        av4 = np.average(mm, weights=weights[findx]
-                        ,axis=0)
-        av_bw = blockwise_average_ND(av4, [2,2])
-        
-        bb = np.array(bmaps)
-        av_bb = np.average(bb, weights=weights[findx],
-                            axis = 0)
-        
-        btrack.append(av_bb)
-        #av_ind = (av_bw)*((av_bw > 0.8) & (av_bw < 1.3))
-        #av_ind = (av_bw)*(av_bw > 0.1) # pixe; thresholding
-
-        #av = np.where(av_ind==0, np.nan, av_ind)
-        #av = av_ind
-        av=av_bw
-        hrs_indx = []
-        hrs = ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00']
-        
-        for ii in hrs:
-            idx = [i for i, j in enumerate(ffiles[findx:findx+1]) if j.endswith(f'{ii}_FD_k-nu.fits')]
-            hrs_indx.append(idx)
+            g_pnt = SkyCoord(glon*u.deg, glat*u.deg, 
+                                    frame=frames.HeliographicStonyhurst, obstime=date,
+                                    observer = "earth")
+            g_pnt = g_pnt.transform_to(frames.Helioprojective)
             
-        #print(hrs_indx)
+            grid_pnt = [[g_pnt.Tx.arcsec, g_pnt.Ty.arcsec]]
+            
+            
+            knn = NearestNeighbors(n_neighbors=4)
+            knn.fit(np.column_stack((proj_points.Tx, proj_points.Ty)))
+            dist, indx = knn.kneighbors(X=grid_pnt, return_distance=True)
+            #print(dist,indx)
+    
+            latdx = np.concatenate([np.where(round(ii.lat.degree, 3) == latFD)[0] for ii in proj_points.transform_to(frames.HeliographicStonyhurst)[indx[0]]])
+            lindx = np.concatenate([np.where(round(ii.lon.degree, 3) == lonFD)[0] for ii in proj_points.transform_to(frames.HeliographicStonyhurst)[indx[0]]])
+    
+          
+            """Generating maps"""
+            #ik0 = 0        
+            f=fits.open('/Volumes/SP PHD U3/FD_cubes_carree.050/2010' + f"/{date.strftime('%Y-%m-%d_%H:%M')}_FD_k-nu.fits")
+            fmaps = []
+            bmaps = []
+            for lat_ind,lon_ind in zip(latdx,lindx): 
+                data_map = f[0].data[lat_ind ,lon_ind,0,:,:]
+                bmap = f[1].data[latdx, lindx]
+                fmaps.append(data_map)
+                bmaps.append(bmap)
+            f.close()
+                
+            """Creating point map"""
+            # for ii in np.array(fmaps):
+            mm = np.array(fmaps)
+            av4 = np.average(mm, weights=np.array(weights)[ii,jj]
+                            ,axis=0)
+            #av_bw = blockwise_average_ND(av4, [2,2])
+            
+            # bb = np.array(bmaps)
+            # av_bb = np.average(bb, weights=np.array(weights)[ii,jj],
+            #                     axis = 0)
+            
+            # btrack.append(av_bb)
+            #av=av_bw
+            # hrs_indx = []
+            # hrs = ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00']
+            
+            # for ii in hrs:
+            #     idx = [i for i, j in enumerate(ffiles[findx:findx+1]) if j.endswith(f'{ii}_FD_k-nu.fits')]
+            #     hrs_indx.append(idx)
+                
+            img_bw = np.abs(av4/np.array(av_maps)[ii,jj])
+    
+            #print(np.nanmean(img_bw))
+            if np.nanmean(img_bw) != np.nan and np.nanmean(img_bw) > 0.0 and np.nanmean(img_bw) < 1e10:
+                int_map.append(img_bw)
+                # btrack.append(brms_tt)
+                #mindx.append(findx)
+                #print(f'finished for: {glon} lon, {glat} lat')
+            else:
+                int_map.append(img_bw)
+                #btrack.append(brms_tt)
+                #print(f'No valid map for: for {glon} lon, {glat} lat')
+            #print('____________________________________')
+            
+        trackmap.append(int_map)
         
-        # av_indx = np.array([ii for ii, jj in enumerate(hrs_indx) if len(jj) != 0])[0]
-        # av_map = np.array(av_maps)
-        #brms_arr = np.array(brms)
-        
-        #img = np.abs(av/av_map[findx][av_indx])
-        img_bw = np.abs(av/blockwise_average_ND(av_maps[findx],[2,2]))
-        #brms_tt = brms[findx][av_indx]
-
-        # uo_maps.append(img)
-        
-        # hrs_indx_arr = np.concatenate(hrs_indx)
-        # map_indx = np.argsort(hrs_indx_arr)
-        # o_maps = [np.array(uo_maps)[jk,:,:] for jk in map_indx]
-        #img_bw = blockwise_average_ND(trackmap[0], [5,5]
-        print(np.nanmean(img_bw))
-        if np.nanmean(img_bw) != np.nan and np.nanmean(img_bw) > 0.0 and np.nanmean(img_bw) < 1e10:
-            trackmap.append(img_bw)
-            # btrack.append(brms_tt)
-            mindx.append(findx)
-            print(f'finished for {glon}, file: {ffiles[findx]}')
-        else:
-            trackmap.append(img_bw)
-            #btrack.append(brms_tt)
-            print(f'No valid map for: {glon}, file: {ffiles[findx]}')
-        print('____________________________________')
-    return(trackmap, btrack, mindx)
-
+    return(trackmap)
+#%%
+def norm_knu_FD(date=Time('2010-11-30T04:00:00', format='isot')):
+    av_maps, dd_indx, whts = CRFF_avFD()
+    trackmap  = FF_deprojFD(av_maps, dd_indx, whts)
+    return(trackmap)
+    
