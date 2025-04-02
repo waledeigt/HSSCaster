@@ -493,9 +493,10 @@ def fmode_pow(fav, ferr, llon, fin_dates, emerge_rot, true_emerge):
 #     return(trackmap, btrack, mindx)
 
 #%%
-def CRFF_avFD(date=Time('2010-11-30T04:00:00', format='isot'),lonFD=np.linspace(-75,75,21), latFD = np.linspace(-67.5,67.5,19)):
+def CRFF_avFD(date,lonFD=np.linspace(-75,75,21), latFD = np.linspace(-67.5,67.5,19)):
     
-    
+    date=Time(date, format='isot')
+	
     lng, ltg = np.meshgrid(lonFD, latFD)
     lng , ltg = lng.flatten(), ltg.flatten()
     points = np.column_stack((lng,ltg))
@@ -505,11 +506,11 @@ def CRFF_avFD(date=Time('2010-11-30T04:00:00', format='isot'),lonFD=np.linspace(
     whts = []
     lon_pt = []
     lat_pt = []
-    for glon in lonFD:
+    for glon in latFD:
         av_int_maps = []
         dd_int_indx = []
         int_whts = []
-        for glat in latFD:
+        for glat in lonFD:
             
             proj_points = SkyCoord(points[:,0]*u.deg, points[:,1]*u.deg, 
                                     frame=frames.HeliographicStonyhurst, obstime=Time('2010-12-10T08:00:00', format='isot'),
@@ -579,8 +580,8 @@ def CRFF_avFD(date=Time('2010-11-30T04:00:00', format='isot'),lonFD=np.linspace(
 
 
 #%%
-def FF_deprojFD(av_maps, dd_indx, weights, date=Time('2010-11-30T04:00:00', format='isot'),lonFD=np.linspace(-75,75,21), latFD = np.linspace(-67.5,67.5,19)):
-
+def FF_deprojFD(av_maps, dd_indx, weights, date, format='isot'),lonFD=np.linspace(-75,75,21), latFD = np.linspace(-67.5,67.5,19)):
+    date = Time(date, format='isot')
     lng, ltg = np.meshgrid(lonFD, latFD)
     lng , ltg = lng.flatten(), ltg.flatten()
     points = np.column_stack((lng,ltg))
@@ -591,9 +592,9 @@ def FF_deprojFD(av_maps, dd_indx, weights, date=Time('2010-11-30T04:00:00', form
     # mindx = []
     # btrack = []
     trackmap = []
-    for ii, glon in enumerate(lonFD):
+    for ii, glat in enumerate(latFD):
         int_map = []
-        for jj, glat in enumerate(latFD):
+        for jj, glon in enumerate(lonFD):
     
         #data_files = data_path + f'{ffiles[findx]}'
         # glon, glat = 24,  -12
