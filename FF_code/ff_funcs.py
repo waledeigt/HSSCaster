@@ -506,11 +506,11 @@ def CRFF_avFD(date,lonFD=np.linspace(-75,75,21), latFD = np.linspace(-67.5,67.5,
     whts = []
     lon_pt = []
     lat_pt = []
-    for glon in latFD:
+    for glat in latFD:
         av_int_maps = []
         dd_int_indx = []
         int_whts = []
-        for glat in lonFD:
+        for glon in lonFD:
             
             proj_points = SkyCoord(points[:,0]*u.deg, points[:,1]*u.deg, 
                                     frame=frames.HeliographicStonyhurst, obstime=Time('2010-12-10T08:00:00', format='isot'),
