@@ -671,8 +671,9 @@ def FF_deprojFD(av_maps, dd_indx, weights, date, format='isot'),lonFD=np.linspac
         
     return(trackmap)
 #%%
-def norm_knu_FD(date=Time('2010-11-30T04:00:00', format='isot')):
-    av_maps, dd_indx, whts = CRFF_avFD()
-    trackmap  = FF_deprojFD(av_maps, dd_indx, whts)
-    return(trackmap)
+def norm_knu_FD(date, lonFD=np.linspace(-75,75,21), latFD = np.linspace(-67.5,67.5,19)):
+    date = Time(date, format='isot')
+    av_maps, dd_indx, whts = CRFF_avFD(date)
+    trackmap, obsmap  = FF_deprojFD(av_maps, dd_indx, whts, date)
+    return(trackmap, av_maps, obsmap)
     
